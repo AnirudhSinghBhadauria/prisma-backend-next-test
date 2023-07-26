@@ -5,11 +5,8 @@ export async function GET() {
   const prisma = new PrismaClient();
 
   const user = await prisma.post.findMany({
-    where: {
-      author: { is: { name: "Kendrick Lamar" } },
-    },
+    orderBy: { postNumber: "desc" },
   });
 
-
-  return NextResponse.json({user});
+  return NextResponse.json({ user });
 }
