@@ -9,6 +9,211 @@ datasource db {
 }
 
 model Author {
-  id   String @id @default(uuid())
-  name String
+  id             String   @id @unique @default(uuid())
+  name           String   @db.VarChar(18)
+  slug           String   @unique
+  profilePicture String   @unique
+  designation    String
+  descriptionOne String   @db.VarChar(160)
+  descriptionTwo String   @db.VarChar(500)
+  joinedAt       DateTime @unique @default(now())
+
+  authorNumber Int @unique @default(autoincrement())
+
+  // Socail Media
+
+  email     String  @unique
+  twitter   String?
+  instagram String?
+  linktree  String?
+  linkedin  String?
+
+  // Stroy Relation
+
+  HeadlinerStory HeadlinerStory[]
+  SideStory      SideStory[]
+  MainStory      MainStory[]
 }
+
+model HeadlinerStory {
+  id         String   @id @unique @default(uuid())
+  PostNumber Int      @unique @default(autoincrement())
+  Reads      Int      @default(0)
+  slug       String   @unique
+  CreatedAt  DateTime @default(now())
+  UpdatedAt  DateTime @updatedAt
+
+  // Author Relation
+
+  Author   Author @relation(fields: [authorId], references: [id])
+  authorId String @unique
+
+  // Category Relation 
+
+  Category Genre  @relation(fields: [genreId], references: [id])
+  genreId  String @unique
+
+  // Thumb Contnet
+
+  ThumbTitle            String @unique @db.VarChar(55)
+  ThumbDescription      String @db.VarChar(105)
+  ThumbImage            String @unique
+  ThumbImageDescription String @db.VarChar(100)
+
+  // Dedicated Page content
+
+  title            String @unique @db.VarChar(60)
+  description      String @db.VarChar(140)
+  tag              String
+  Image            String @unique
+  ImageDescription String @db.VarChar(100)
+  BackgroundColor  Colors @default(LEAF)
+
+  // Story Content 
+
+  IntroPara String  @db.VarChar(450)
+  ParaTwo   String  @db.VarChar(450)
+  ParaThree String  @db.VarChar(450)
+  ParaFour  String  @db.VarChar(450)
+  ParaFive  String? @db.VarChar(450)
+  ParaSix   String? @db.VarChar(450)
+  ParaSeven String  @db.VarChar(400)
+  ParaEight String  @db.VarChar(450)
+
+  AsideText String @db.VarChar(120)
+}
+
+model MainStory {
+  id         String   @id @unique @default(uuid())
+  PostNumber Int      @unique @default(autoincrement())
+  CreatedAt  DateTime @default(now())
+  UpdatedAt  DateTime @updatedAt
+  slug       String   @unique
+  Reads      Int      @default(0)
+
+  // Thumb Content 
+
+  ThumbTitle               String @db.VarChar(60)
+  ThumbDescription         String @db.VarChar(150)
+  ThumbImageOne            String @unique
+  ThumbImageTwo            String @unique
+  ThumbImageOneDescription String @db.VarChar(100)
+  ThumbImageTwoDescription String @db.VarChar(100)
+
+  SummaryHighlighted String @db.VarChar(200)
+  Summary            String @db.VarChar(700)
+
+  // Dedicated Page content 
+
+  title            String @unique @db.VarChar(60)
+  description      String @db.VarChar(140)
+  tag              String
+  Image            String @unique
+  ImageDescription String @db.VarChar(100)
+  BackgroundColor  Colors @default(LEAF)
+
+  // Story Content 
+
+  IntroPara String  @db.VarChar(450)
+  ParaTwo   String  @db.VarChar(450)
+  ParaThree String  @db.VarChar(450)
+  ParaFour  String  @db.VarChar(450)
+  ParaFive  String? @db.VarChar(450)
+  ParaSix   String? @db.VarChar(450)
+  ParaSeven String  @db.VarChar(400)
+  ParaEight String  @db.VarChar(450)
+
+  AsideText String @db.VarChar(120)
+
+  // Author Relation 
+
+  Author   Author @relation(fields: [authorId], references: [id])
+  authorId String @unique
+
+  // Category Relation 
+
+  Category Genre  @relation(fields: [genreId], references: [id])
+  genreId  String @unique
+}
+
+model SideStory {
+  id         String   @id @unique @default(uuid())
+  PostNumber Int      @unique @default(autoincrement())
+  CreatedAt  DateTime @default(now())
+  UpdateAt   DateTime @updatedAt
+  slug       String   @unique
+  Reads      Int      @default(0)
+
+  // Thumb Contnet
+
+  ThumbTitle            String @unique @db.VarChar(60)
+  ThumbImage            String @unique
+  ThumbImageDescription String @db.VarChar(100)
+  ThumbDescriptionOne   String @db.VarChar(105)
+  ThumbDescriptionTwo   String @db.VarChar(105)
+
+  // Dedicated Content 
+
+  title            String @unique @db.VarChar(60)
+  description      String @db.VarChar(140)
+  tag              String
+  Image            String @unique
+  ImageDescription String @db.VarChar(100)
+  BackgroundColor  Colors @default(LEAF)
+
+  // Story Content 
+
+  IntroPara String  @db.VarChar(450)
+  ParaTwo   String  @db.VarChar(450)
+  ParaThree String  @db.VarChar(450)
+  ParaFour  String  @db.VarChar(450)
+  ParaFive  String? @db.VarChar(450)
+  ParaSix   String? @db.VarChar(450)
+  ParaSeven String  @db.VarChar(400)
+  ParaEight String  @db.VarChar(450)
+
+  AsideText String @db.VarChar(120)
+
+  // Author Relation 
+
+  Author   Author @relation(fields: [authorId], references: [id])
+  authorId String @unique
+
+  // Category Relation 
+
+  Category Genre  @relation(fields: [genreId], references: [id])
+  genreId  String @unique
+}
+
+// Story Category 
+
+model Genre {
+  id       String   @id @unique @default(uuid())
+  Category Category @default(TECH)
+
+  // Story Realtion
+
+  HeadlinerStory HeadlinerStory[]
+  SideStory      SideStory[]
+  MainStory      MainStory[]
+}
+
+//  ENUMS
+
+enum Colors {
+  ORANGE
+  PINK
+  LEAF
+  TORQUISE
+}
+
+enum Category {
+  ENTERTAINTMENT
+  NEWS
+  TECH
+  REVIEW
+}
+
+
+
+
