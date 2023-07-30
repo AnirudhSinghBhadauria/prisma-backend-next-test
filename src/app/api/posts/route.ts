@@ -3,11 +3,19 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET() {
-  const posts = await prisma.post.findMany({
-    orderBy: { postNumber: "desc" },
-  });
+  try {
+    const posts = await prisma.post.findMany({
+      orderBy: { postNumber: "desc" },
+    });
 
-  return NextResponse.json({ posts }, { status: 200 });
+    return NextResponse.json({ posts }, { status: 200 });
+    
+  } catch (error) {
+    return NextResponse.json({
+      error: error,
+      errorMessage: "this is an error message",
+    });
+  }
 }
 
 export async function POST(data: Request) {
@@ -19,7 +27,10 @@ export async function POST(data: Request) {
     return NextResponse.json("OK");
   } catch (error) {
     return NextResponse.json(
-      { error: error },
+      {
+        error: error,
+        errorMessage: "this is a error mesage,sorry for inconvinience",
+      },
       {
         status: 409,
       }
