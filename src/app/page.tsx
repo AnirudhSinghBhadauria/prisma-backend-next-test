@@ -4,13 +4,24 @@ import { Fragment, useState } from "react";
 
 const Home = () => {
   const [posts, setPosts] = useState<[]>([]);
+  const [error, setError] = useState<Boolean>(false);
 
   const getSomePost = async () => {
     const posts = await fetch("/api/posts", {
       method: "GET",
     });
 
+    if (!posts.ok) {
+      console.log("Error - Reading that API");
+      setError(true);
+      return;
+    }else {
+      setError(false)
+    }
+
     const result = await posts.json();
+
+    // console.log(result)
 
     setPosts(result.posts);
   };
@@ -77,7 +88,11 @@ const Home = () => {
 
   return (
     <Fragment>
-      <ul>{posts && posts.map(({ name }) => <li key={name}>{name}</li>)}</ul>
+      {!error ? (
+        <ul>{posts && posts.map(({ name }) => <li key={name}>{name}</li>)}</ul>
+      ) : (
+        <p>Oops! that didnt went well, Im sorry for inconvinience.</p>
+      )}
       <button onClick={getSomePost}>Make Api call</button>
       <br />
       {/* <button onClick={addUsers}>Add Users</button> */}

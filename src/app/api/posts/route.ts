@@ -9,10 +9,8 @@ export async function GET() {
     });
 
     return NextResponse.json({ posts }, { status: 200 });
-    
   } catch (error) {
     return NextResponse.json({
-      error: error,
       errorMessage: "this is an error message",
     });
   }
