@@ -1,20 +1,22 @@
-// import { PrismaClient } from "@prisma/client";
-// import { NextResponse } from "next/server";
-// const prisma = new PrismaClient();
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+const prisma = new PrismaClient();
 
-// export async function GET() {
-//   try {
-//     const posts = await prisma.post.findMany({
-//       orderBy: { postNumber: "desc" },
-//     });
+export async function GET() {
+  try {
+    const posts = await prisma.headlinerStory.findMany({
+      orderBy: { PostNumber: "desc" },
+      take: 1,
+    });
 
-//     return NextResponse.json({ posts }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({
-//       errorMessage: "this is an error message",
-//     });
-//   }
-// }
+    return NextResponse.json({ posts }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({
+      error: error,
+      errorMessage: "this is an error message",
+    });
+  }
+}
 
 // export async function POST(data: Request) {
 //   try {
